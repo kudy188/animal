@@ -54,9 +54,13 @@ function App() {
   const playSound = () => {
     if (selectedAnimal) {
       stopSound()
-      const newAudio = new Audio(selectedAnimal.sound_path)
+      const soundPath = new URL(selectedAnimal.sound_path, import.meta.url).href
+      const newAudio = new Audio(soundPath)
       newAudio.addEventListener('ended', () => setIsPlaying(false))
-      newAudio.play()
+      newAudio.play().catch(error => {
+        console.error('Error playing sound:', error)
+        setIsPlaying(false)
+      })
       setAudio(newAudio)
       setIsPlaying(true)
     }
@@ -114,9 +118,10 @@ function App() {
             <CardContent>
               <div className="space-y-6">
                 <img
-                  src={selectedAnimal.image_path}
+                  src={new URL(selectedAnimal.image_path, import.meta.url).href}
                   alt={selectedAnimal.name_en}
                   className="w-full h-64 object-cover rounded-lg"
+                  onError={(e) => console.error('Error loading image:', e)}
                 />
                 <p className="text-gray-700 text-lg">
                   {selectedAnimal.description}
