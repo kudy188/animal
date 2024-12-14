@@ -27,8 +27,8 @@ function App() {
 
     const updatedAnimal = {
       ...animal,
-      image: new URL(`../public/images/${animal.image}`, import.meta.url).href,
-      sound: new URL(`../public/sounds/${animal.sound}`, import.meta.url).href
+      image: `/images/${animal.image}`,
+      sound: `/sounds/${animal.sound}`
     };
 
     setError('');
@@ -81,7 +81,7 @@ function App() {
                       controls
                       className="w-full"
                     >
-                      <source src={selectedAnimal.sound} type="audio/mpeg" />
+                      <source src={selectedAnimal.sound} type="audio/wav" />
                       お使いのブラウザは音声再生に対応していません
                     </audio>
                   </div>
