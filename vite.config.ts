@@ -4,24 +4,18 @@ import { defineConfig } from "vite"
 
 export default defineConfig({
   plugins: [react()],
-  base: './',  // Use relative paths for assets
+  base: '/',  // Use absolute paths for assets
   publicDir: 'public', // Explicitly set public directory
   build: {
-    assetsDir: 'assets',
+    assetsDir: '',  // Keep assets in root of dist
     rollupOptions: {
       output: {
         assetFileNames: (assetInfo) => {
-          const name = assetInfo.name || '';
-          const ext = name.split('.').pop() || '';
-          let extType = 'asset';
-
-          if (/png|jpe?g|svg|gif|tiff|bmp|ico/i.test(ext)) {
-            extType = 'img';
-          } else if (/wav|mp3/i.test(ext)) {
-            extType = 'audio';
-          }
-
-          return `assets/${extType}/[name]-[hash][extname]`;
+          if (!assetInfo.name) return 'assets/[name]-[hash][extname]';
+          const ext = assetInfo.name.split('.').pop() || '';
+          const dir = ext.match(/png|jpe?g|gif|svg|ico/i) ? 'images' :
+                     ext.match(/mp3|wav/i) ? 'sounds' : 'assets';
+          return `${dir}/[name][extname]`;  // Preserve original names
         },
       },
     },
